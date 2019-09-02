@@ -21,7 +21,6 @@ photos = UploadSet('photos', IMAGES)
 configure_uploads(app, photos)
 patch_request_class(app)  # set maximum file size, default is 16MB
 
-
 class UploadForm(FlaskForm):
     name = StringField('Username', validators=[DataRequired()])
     photo = FileField(validators=[FileAllowed(photos, 'Image only!'), FileRequired('File was empty!')])
@@ -33,14 +32,15 @@ detector = object_detector.Detector(app.config['PATH_TO_FROZEN_GRAPH'], app.conf
 def board_from_image(file, name, email):
     bgr = cv.imdecode(np.frombuffer(file.read(), np.uint8), -1)
     image = cv.cvtColor(bgr, cv.COLOR_BGR2RGB)
-    postits.postit_board(detector, 'a board', image, name, email)
+    return postits.postit_board(detector, 'a board', image, name, email)
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
     form = UploadForm()
+    url = None
     if form.validate_on_submit():
-        board_from_image(form.photo.data, form.name.data, form.email.data)
-    return render_template('index.html', form=form)
+        url = board_from_image(form.photo.data, form.name.data, form.email.data)
+    return render_template('index.html', form=form, url=url)
 
 if __name__ == '__main__':
     app.run()

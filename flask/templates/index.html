@@ -30,6 +30,9 @@
                             {% endfor %}
                         </p>
                         <p>{{ form.submit }}</p>
+                        {% if url != None %}
+                            <h2>Your trello board link is <a href="{{url}}">{{url}}</a></h2>
+                        {% endif %}
                     </form>
             </div>
         </div>
