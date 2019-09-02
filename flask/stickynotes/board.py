@@ -1,9 +1,6 @@
 import requests
 import numpy as np
 
-key = '3e45014c6465df422ec100f100892125'
-token = '56527009f8e75488442c4d88417af348c86e32e03d2852286f0d0fe580c45051'
-
 class Card:
     def __init__(self, name, group, label):
         self.name = name
@@ -14,7 +11,7 @@ class Card:
 
     def make(self):
         url = "https://api.trello.com/1/cards"
-        query = {"idList": self.group.id, "idLabels": self.board.labels[self.label], "name": self.name, "key": key, "token": token}
+        query = {"idList": self.group.id, "idLabels": self.board.labels[self.label], "name": self.name, "key": self.board.key, "token": self.board.token}
         response = requests.request("POST", url, params=query)
         self.id = response.json()['id']
 
@@ -33,17 +30,19 @@ class Group:
 
     def make(self):
         url = "https://api.trello.com/1/lists"
-        query = {"name": self.name, "idBoard": self.board.id, "key": key, "token": token}
+        query = {"name": self.name, "idBoard": self.board.id, "key": self.board.key, "token": self.board.token}
         response = requests.request("POST", url, params=query).json()
         self.id = response['id']
         for card in self.cards:
             card.make()
 
 class Board:
-    def __init__(self, name, groups):
+    def __init__(self, key, token, name, groups):
         self.name = name
         self.labels = self.parse_labels(groups)
         self.groups = self.build_groups(groups)
+        self.key = key
+        self.token = token
         self.id = None
         self.url = None
 
@@ -55,7 +54,7 @@ class Board:
 
     def make(self):
         url = 'https://api.trello.com/1/boards'
-        query = {'name': self.name, 'defaultLabels': 'false', 'defaultLists': 'false', 'key': key, 'token': token}
+        query = {'name': self.name, 'defaultLabels': 'false', 'defaultLists': 'false', 'key': self.key, 'token': self.token}
         response = requests.request("POST", url, params = query).json()
         self.id = response['id']
         self.make_labels()
@@ -74,14 +73,14 @@ class Board:
         labels = {}
         for label in self.labels:
             url = "https://api.trello.com/1/labels"
-            query = {"name": "", "color": label, "idBoard": self.id, "key": key, "token": token}
+            query = {"name": "", "color": label, "idBoard": self.id, "key": self.key, "token": self.token}
             response = requests.request("POST", url, params=query)
             labels[label] = response.json()['id']
         self.labels = labels
 
     def invite(self, name, email):
         url = "https://api.trello.com/1/boards/{}/members".format(self.id)
-        query = {"email": email, "key": key, "token": token}
+        query = {"email": email, "key": self.key, "token": self.token}
         payload = "{\"fullName\":\"" + name + "\"}"
         headers = {
             'type': "admin",
@@ -91,7 +90,7 @@ class Board:
 
     def board_url(self, short=True):
         url = "https://api.trello.com/1/boards/{}".format(self.id)
-        query = {"key": key, "token": token}
+        query = {"key": self.key, "token": self.token}
         query["fields"] = "shortUrl" if short else "url"
         response = requests.request("GET", url, params=query).json()
         return response["shortUrl"] if short else response["url"]

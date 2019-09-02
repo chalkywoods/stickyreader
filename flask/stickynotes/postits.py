@@ -6,8 +6,6 @@ import pytesseract as pt
 from matplotlib import pyplot as plt
 from stickynotes import azure
 
-text_detector = azure.TextDetector("26a32a30c1bd44c1b73dd5827bcc5a13")
-
 def get_color(color):
     trello_colors = {
     'yellow': (242, 214, 0),
@@ -89,11 +87,10 @@ def note_color(img):
     return get_color(avg_color)
 
 def postit_card(name, image):
-    cv.imwrite('output_images/image{}x{}.jpg'.format(image.shape[0], image.shape[1]), contrast(image))
     card = {'name': name, 'label': note_color(image)}
     return card
 
-def postit_group(name, images):
+def postit_group(text_detector, name, images):
     group = {'name': name, 'cards':[]}
     byteimages = []
     for image in images:
@@ -103,10 +100,10 @@ def postit_group(name, images):
         group['cards'].append(postit_card(text[i], images[i]))
     return group
 
-def postit_board(detector, name, image, username, email):
-    images = detector.infer_images(image)
-    group = postit_group('group1', images)
-    newBoard = board.Board(name, [group])
+def postit_board(postit_detector, text_detector, key, token, name, image, username, email):
+    images = postit_detector.infer_images(image)
+    group = postit_group(text_detector, 'group1', images)
+    newBoard = board.Board(key, token, name, [group])
     newBoard.make()
     newBoard.invite(username, email)
     return newBoard.url

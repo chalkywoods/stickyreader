@@ -7,7 +7,7 @@ import threading
 import cv2 as cv
 
 class TextDetector:
-    def __init__(self, subscription_key, url = "https://stickynote.cognitiveservices.azure.com/vision/v2.0/read/core/asyncBatchAnalyze"):
+    def __init__(self, subscription_key, url):
         self.sub_key = subscription_key
         self.url = url
         self.request_queue = queue.Queue()
