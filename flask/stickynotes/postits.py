@@ -109,4 +109,5 @@ def postit_board(detector, name, image, username, email):
     newBoard = board.Board(name, [group])
     newBoard.make()
     newBoard.invite(username, email)
+    return newBoard.url
 

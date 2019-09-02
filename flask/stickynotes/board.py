@@ -44,6 +44,8 @@ class Board:
         self.name = name
         self.labels = self.parse_labels(groups)
         self.groups = self.build_groups(groups)
+        self.id = None
+        self.url = None
 
     def build_groups(self, groups):
         group_list = []
@@ -59,6 +61,7 @@ class Board:
         self.make_labels()
         for group in reversed(self.groups):
             group.make()
+        self.url = self.board_url()
 
     def parse_labels(self, groups):
         labels = set()
@@ -86,6 +89,12 @@ class Board:
             }
         response = requests.request("PUT", url, data=payload, headers=headers, params=query)
 
+    def board_url(self, short=True):
+        url = "https://api.trello.com/1/boards/{}".format(self.id)
+        query = {"key": key, "token": token}
+        query["fields"] = "shortUrl" if short else "url"
+        response = requests.request("GET", url, params=query).json()
+        return response["shortUrl"] if short else response["url"]
 
 if __name__ == "__main__":
     groups = [{'name': 'group 1', 'cards': [{'name':'a card', 'label': 'pink'}, {'name': 'another card', 'label': 'green'}]},

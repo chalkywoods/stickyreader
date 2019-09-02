@@ -27,7 +27,7 @@ body trello_btn{
   background-color: white;
 }
  .modal {
-  display: block; /* Hidden by default */
+  display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
   margin-top: 25%;
@@ -40,7 +40,7 @@ body trello_btn{
 }
 /* Modal Content */
 .modal-content {
-  background-color: #fefefe;
+  background-color: #888;
   margin: auto;
   padding: 20px;
   border: 1px solid #888;

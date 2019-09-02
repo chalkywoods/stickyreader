@@ -23,8 +23,8 @@ PATH_TO_LABELS = 'training/stickynote.pbtxt'
 def load_model(graph_path, label_path):
     detection_graph = tf.Graph()
     with detection_graph.as_default():
-        od_graph_def = tf.GraphDef()
-        with tf.gfile.GFile(graph_path, 'rb') as fid:
+        od_graph_def = tf.compat.v1.GraphDef()
+        with tf.io.gfile.GFile(graph_path, 'rb') as fid:
             serialized_graph = fid.read()
             od_graph_def.ParseFromString(serialized_graph)
             tf.import_graph_def(od_graph_def, name='')
@@ -35,9 +35,9 @@ def load_model(graph_path, label_path):
 def detector(input_q, output_q, graph, category_index):
     detect = True
     with graph.as_default():
-        with tf.Session() as sess:
+        with tf.compat.v1.Session() as sess:
             # Get handles to input and output tensors
-            ops = tf.get_default_graph().get_operations()
+            ops = tf.compat.v1.get_default_graph().get_operations()
             all_tensor_names = {output.name for op in ops for output in op.outputs}
             tensor_dict = {}
             for key in [
@@ -46,7 +46,7 @@ def detector(input_q, output_q, graph, category_index):
             ]:
                 tensor_name = key + ':0'
                 if tensor_name in all_tensor_names:
-                    tensor_dict[key] = tf.get_default_graph().get_tensor_by_name(
+                    tensor_dict[key] = tf.compat.v1.get_default_graph().get_tensor_by_name(
                         tensor_name)
             while detect:
                 try:
@@ -74,7 +74,7 @@ def detector(input_q, output_q, graph, category_index):
                         # Follow the convention by adding back the batch dimension
                         tensor_dict['detection_masks'] = tf.expand_dims(
                             detection_masks_reframed, 0)
-                    image_tensor = tf.get_default_graph().get_tensor_by_name('image_tensor:0')
+                    image_tensor = tf.compat.v1.get_default_graph().get_tensor_by_name('image_tensor:0')
 
                     # Run inference
                     output_dict = sess.run(tensor_dict,
