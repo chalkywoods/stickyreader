@@ -8,7 +8,13 @@
             <header>
                     <h1>Sticky-Note Reader</h1>
             </header>
-        <button id="trello_btn">Trello Upload</button>
+        <div class="centered">
+            <button id="trello_btn" class="button">Trello</button>
+        </div>
+        <div class="centered">
+            <img src="{{ url_for('static', filename='css/image4.jpg') }}" alt="postits" width="600">
+        </div>
+        
         <div id="myModal" class="modal">
             <div class="modal-content">
                 <span class="close">&times;</span>
@@ -29,7 +35,10 @@
                                 <span style="color: red;">{{ error }}</span>
                             {% endfor %}
                         </p>
-                        <p>{{ form.submit }}</p>
+                        <div class="centered">
+                            <p>{{ form.submit }}</p>
+                        </div>
+                        
                     </form>
             </div>
         </div>
@@ -45,7 +54,7 @@
             
             // When the user clicks the button, open the modal 
             btn.onclick = function() {
-                modal.style.display = "block";
+                modal.style.display = "inline-block";
             }
             
             // When the user clicks on <span> (x), close the modal

@@ -23,9 +23,9 @@ patch_request_class(app)  # set maximum file size, default is 16MB
 
 
 class UploadForm(FlaskForm):
-    name = StringField('Username', validators=[DataRequired()])
+    name = StringField('Username', validators=[DataRequired()], render_kw={"placeholder": "Your username.."})
     photo = FileField(validators=[FileAllowed(photos, 'Image only!'), FileRequired('File was empty!')])
-    email = StringField('Trello email address', validators=[DataRequired()])
+    email = StringField('Trello email address', validators=[DataRequired()], render_kw={"placeholder": "Your email.."})
     submit = SubmitField('Upload')
 
 detector = object_detector.Detector(app.config['PATH_TO_FROZEN_GRAPH'], app.config['PATH_TO_LABELS'])

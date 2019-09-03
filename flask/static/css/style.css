@@ -21,35 +21,72 @@ body {
   font-size: 20pt;
   color: #E9F1F7;
   position: relative;
+  height: 100%;
+  overflow: scroll;
 }
 
-body trello_btn{
+.button {
+  cursor: pointer;
   background-color: white;
+  
 }
+
  .modal {
-  display: block; /* Hidden by default */
+  display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
-  margin-top: 25%;
+  margin-top: 10%;
+  margin-left: 25%;
+  margin-right: 25%;
+  margin-bottom: 10%;
   left: 0;
   top: 0;
   color: black;
-  width: 100%; /* Full width */
   height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
+  width: 60%;
+  overflow: scroll; /* Enable scroll if needed */
 }
 /* Modal Content */
 .modal-content {
-  background-color: #fefefe;
+  background-color: #5230ebbd;
   margin: auto;
   padding: 20px;
+  color: #d7d5e0;
   border: 1px solid #888;
   width: 80%;
-  align-self: center;
 }
 
-.modal-content form{
-  border-color: #000;
+input[type="submit" i] {
+  -webkit-appearance: push-button;
+  user-select: none;
+  white-space: pre;
+  align-items: flex-start;
+  text-align: center;
+  cursor: pointer;
+  color: black;
+  background-color: white;
+  box-sizing: border-box;
+  padding: 1px 6px;
+}
+
+input[type="file" i] + label{
+  background-color: blue;
+  cursor: pointer;
+  align-items: baseline;
+  color: black;
+  text-align: start !important;
+}
+
+#trello_btn {
+  font-size: 30pt;
+  font-family: 'Impact', sans-serif;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  
+}
+
+.centered {
+  text-align: center;
 }
 /* The Close Button */
 .close {
