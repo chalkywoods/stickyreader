@@ -7,11 +7,12 @@ import threading
 import cv2 as cv
 
 class TextDetector:
-    def __init__(self, subscription_key, url):
+    def __init__(self, subscription_key, url, use_confidence = True):
         self.sub_key = subscription_key
         self.url = url
         self.request_queue = queue.Queue()
         self.complete_queue = queue.Queue()
+        self.use_confidence = use_confidence
 
     def batch_infer(self, images):
         retriever = threading.Thread(target = self.retrieve_thread)
@@ -67,11 +68,11 @@ class TextDetector:
                 poll = False
         return self.line_from_json(analysis)
 
-    def line_from_json(self, analysis, use_confidence=True):
+    def line_from_json(self, analysis):
         all_words = []
         for line in analysis['recognitionResults'][0]['lines']:
             for word in line['words']:
-                if use_confidence:
+                if self.use_confidence:
                     if 'confidence' not in word or word['confidence'] != 'Low':
                         all_words.append(word['text'])
                 else:

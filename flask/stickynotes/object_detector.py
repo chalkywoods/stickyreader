@@ -8,14 +8,9 @@ import sys
 import queue
 import time
 import threading
-sys.path.append('/Users/harry.woods/models/research/')
-sys.path.append('/Users/harry.woods/models/research/object_detection')
-
 from matplotlib import pyplot as plt
-
-from utils import label_map_util
-
-from utils import visualization_utils as vis_util
+from object_detection.utils import label_map_util
+from object_detection.utils import visualization_utils as vis_util
 
 PATH_TO_FROZEN_GRAPH = 'stickynote_inference_graph/frozen_inference_graph.pb'
 PATH_TO_LABELS = 'training/stickynote.pbtxt'
