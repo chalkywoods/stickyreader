@@ -94,7 +94,7 @@ def postit_group(text_detector, name, images):
     group = {'name': name, 'cards':[]}
     byteimages = []
     for image in images:
-        byteimages.append(image_to_bytes(contrast(image)))
+        byteimages.append(image_to_bytes(image))
     text = text_detector.batch_infer(byteimages)
     for i in range(len(images)):
         group['cards'].append(postit_card(text[i], images[i]))
@@ -107,4 +107,12 @@ def postit_board(postit_detector, text_detector, key, token, name, image, userna
     newBoard.make()
     newBoard.invite(username, email)
     return newBoard.url
+
+def postit_textonly(postit_detector, text_detector, image):
+    images = postit_detector.infer_images(image)
+    byteimages = []
+    for image in images:
+        byteimages.append(image_to_bytes(image))
+    text = text_detector.batch_infer(byteimages)
+    return text
 

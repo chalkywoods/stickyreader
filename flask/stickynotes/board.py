@@ -95,6 +95,11 @@ class Board:
         response = requests.request("GET", url, params=query).json()
         return response["shortUrl"] if short else response["url"]
 
+def authorise(self, key):
+        url = "https://api.trello.com/1/authorize"
+        query = {"callback_method": "", "return_url": myurl, "scope": "read,write", "expiration": "1hour", "name": "sticky2trello", "key": key, "response_type": "token"}
+        response = requests.request("POST", url, params=query)
+
 if __name__ == "__main__":
     groups = [{'name': 'group 1', 'cards': [{'name':'a card', 'label': 'pink'}, {'name': 'another card', 'label': 'green'}]},
         {'name': 'group 2', 'cards': [{'name': 'a 2nd list card', 'label': 'pink'}, {'name': 'a 2nd 2nd list card', 'label': 'yellow'}]}]

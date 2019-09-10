@@ -7,6 +7,7 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms.validators import DataRequired
 from wtforms import SubmitField, StringField
+from wtforms.fields import RadioField
 from stickynotes import board, postits, object_detector, azure
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -25,27 +26,38 @@ photos = UploadSet('photos', IMAGES)
 configure_uploads(app, photos)
 patch_request_class(app)
 
-class UploadForm(FlaskForm):
+class TrelloForm(FlaskForm):
+    returns = RadioField('Output type', choices=[('trello', 'Trello board'), ('text', 'Text')], default='trello')
     name = StringField('Username', validators=[DataRequired()], render_kw={"placeholder": "Your username.."})
     photo = FileField(validators=[FileAllowed(photos, 'Image only!'), FileRequired('File was empty!')])
     email = StringField('Trello email address', validators=[DataRequired()], render_kw={"placeholder": "Your email.."})
+    boardname = StringField('Trello board name', validators=[DataRequired()], default=" ", render_kw={"placeholder": "Board name.."})
     submit = SubmitField('Upload')
 
 detector = object_detector.Detector(app.config['PATH_TO_FROZEN_GRAPH'], app.config['PATH_TO_LABELS'])
 text_detector = azure.TextDetector(app.config['AZURE_KEY'], app.config['AZURE_ENDPOINT'])
 
-def board_from_image(file, name, email):
+def board_from_image(file, name, email, boardname):
     bgr = cv.imdecode(np.frombuffer(file.read(), np.uint8), -1)
     image = cv.cvtColor(bgr, cv.COLOR_BGR2RGB)
-    return postits.postit_board(detector, text_detector, app.config['TRELLO_KEY'], app.config['TRELLO_TOKEN'], 'a board', image, name, email)
+    return postits.postit_board(detector, text_detector, app.config['TRELLO_KEY'], app.config['TRELLO_TOKEN'], boardname, image, name, email)
+
+def text_from_image(file):
+    bgr = cv.imdecode(np.frombuffer(file.read(), np.uint8), -1)
+    image = cv.cvtColor(bgr, cv.COLOR_BGR2RGB)
+    return postits.postit_textonly(detector, text_detector, image)
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
-    form = UploadForm()
+    form = TrelloForm()
     url = None
+    textout = None
     if form.validate_on_submit():
-        url = board_from_image(form.photo.data, form.name.data, form.email.data)
-    return render_template('index.html', form=form, url=url)
+        if form.returns.data == 'trello':
+            url = board_from_image(form.photo.data, form.name.data, form.email.data, form.boardname.data)
+        else:
+            textout = text_from_image(form.photo.data)
+    return render_template('index.html', form=form, url=url, output=textout)
 
 if __name__ == '__main__':
     app.run()

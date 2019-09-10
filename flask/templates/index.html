@@ -22,12 +22,20 @@
                     <form method="POST" enctype="multipart/form-data">
                         {{ form.hidden_tag() }}
                         <p>
+                                {{ form.returns.label }}<br>
+                                {{ form.returns }}
+                        </p>
+                        <p>
                             {{ form.name.label }}<br>
                             {{ form.name(size=32) }}
                         </p>
                         <p>
                             {{ form.email.label }}<br>
                             {{ form.email(size=48) }}
+                        </p>
+                        <p>
+                            {{ form.boardname.label }}<br>
+                            {{ form.boardname(size=32) }}
                         </p>
                         <p>
                             {{ form.photo }}
@@ -44,6 +52,11 @@
                     </form>
             </div>
         </div>
+        {% if output != None %}
+            {% for line in output %}
+                <p>{{ line }}</p>
+            {% endfor %}
+        {% endif %}
         <script>
             // Get the modal
             var modal = document.getElementById("myModal");
