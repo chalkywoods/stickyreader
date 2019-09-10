@@ -18,11 +18,15 @@ header h1{
 body {
   background-color: #122C34;
   font-family: 'Helvetica', sans-serif;
-  font-size: 20pt;
+  font-size: 3em;
   color: #E9F1F7;
   position: relative;
   height: 100%;
   overflow: scroll;
+}
+
+img {
+  margin: 0.5em 0 0.5em 0;
 }
 
 .button {
@@ -56,7 +60,19 @@ body {
   width: 80%;
 }
 
+input[type="text" i] {
+  font-size: 1em;
+  height: 1em;
+}
+
+input[type="radio" i] {
+  font-size: 1em;
+  height: 1em;
+  width: 1em;
+}
+
 input[type="submit" i] {
+  font-size: 1em;
   -webkit-appearance: push-button;
   user-select: none;
   white-space: pre;
@@ -75,6 +91,11 @@ input[type="file" i] + label{
   align-items: baseline;
   color: black;
   text-align: start !important;
+}
+
+input[type="file" i] {
+  font-size: 0.6em;
+  margin: 0 auto;
 }
 
 #trello_btn {
@@ -106,4 +127,8 @@ input[type="file" i] + label{
 
 ul {
   list-style: none;
+}
+
+.hiddenform {
+  display: none;
 }

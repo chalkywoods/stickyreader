@@ -27,11 +27,14 @@ configure_uploads(app, photos)
 patch_request_class(app)
 
 class TrelloForm(FlaskForm):
-    returns = RadioField('Output type', choices=[('trello', 'Trello board'), ('text', 'Text')], default='trello')
     name = StringField('Username', validators=[DataRequired()], render_kw={"placeholder": "Your username.."})
     photo = FileField(validators=[FileAllowed(photos, 'Image only!'), FileRequired('File was empty!')])
     email = StringField('Trello email address', validators=[DataRequired()], render_kw={"placeholder": "Your email.."})
-    boardname = StringField('Trello board name', validators=[DataRequired()], default=" ", render_kw={"placeholder": "Board name.."})
+    boardname = StringField('Trello board name', validators=[DataRequired()], render_kw={"placeholder": "Board name.."})
+    submit = SubmitField('Upload')
+
+class TextForm(FlaskForm):
+    photo = FileField(validators=[FileAllowed(photos, 'Image only!'), FileRequired('File was empty!')])
     submit = SubmitField('Upload')
 
 detector = object_detector.Detector(app.config['PATH_TO_FROZEN_GRAPH'], app.config['PATH_TO_LABELS'])
@@ -49,15 +52,15 @@ def text_from_image(file):
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
-    form = TrelloForm()
+    trelloform = TrelloForm()
+    textform = TextForm()
     url = None
     textout = None
-    if form.validate_on_submit():
-        if form.returns.data == 'trello':
-            url = board_from_image(form.photo.data, form.name.data, form.email.data, form.boardname.data)
-        else:
-            textout = text_from_image(form.photo.data)
-    return render_template('index.html', form=form, url=url, output=textout)
+    if trelloform.validate_on_submit():
+        url = board_from_image(trelloform.photo.data, trelloform.name.data, trelloform.email.data, trelloform.boardname.data)
+    elif textform.validate_on_submit():
+        textout = text_from_image(textform.photo.data)
+    return render_template('index.html', trelloform=trelloform, textform=textform, url=url, output=textout)
 
 if __name__ == '__main__':
     app.run()
