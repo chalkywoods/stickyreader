@@ -8,4 +8,4 @@ Detection of sticky note location and colour uses a tuned tensorflow object dete
 
 A full write up of the demo is available on [the Valtech blog](https://www.valtech.com/insights/sticky-note-detection/).
 
-Post It have now created a [similar system](https://www.3m.co.uk/3M/en_GB/post-it-notes/ideas/app/) themselves!
+Post It have now created a [similar system](https://www.3m.co.uk/3M/en_GB/post-it-notes/ideas/app/) themselves, though without handwriting detection.
