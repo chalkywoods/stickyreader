@@ -2,7 +2,7 @@
 
 An automatic sticky note digitiser, created to speed up storage and sharing of ideas after group meetings and brainstorming sessions.
 
-Stickyreader takes a photo of a board of sticky notes and converts them into a colour coded trello board.
+Stickyreader uses a photo of a board of sticky notes and converts them into a colour coded [trello](https://trello.com/) board.
 
 Detection of sticky note location and colour uses a tuned tensorflow object detector, whilst handwriting recognition is processed in the Azure cloud. The Trello API is used to create and share the processed sticky notes.
 
